@@ -7,6 +7,8 @@ wheels/
 *.egg-info
 .env
 /files/*
+/old/*
+*_explore.ipynb
 
 # Virtual environments
 .venv
