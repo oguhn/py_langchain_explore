@@ -8,6 +8,7 @@ wheels/
 .env
 /files/*
 /old/*
+.cache
 *_explore.ipynb
 
 # Virtual environments
