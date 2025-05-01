@@ -16,16 +16,16 @@ st.set_page_config(page_title="Document GPT", page_icon="📰")
 # API 키 입력 받기
 with st.sidebar:
     api_key = st.text_input("OpenAI API 키를 입력하세요", type="password", key="api_key")
-    if st.button("Delete Key"):
-        st.session_state.api_key = ""
-        os.environ["OPENAI_API_KEY"] = ""
-        st.rerun()
+    if st.button("확인"):
+        if api_key:
+            st.session_state.api_key_valid = True
+            os.environ["OPENAI_API_KEY"] = api_key
+        else:
+            st.error("API 키를 입력해주세요.")
 
-if not api_key:
-    st.error("OpenAI API 키를 입력해주세요.")
+if not api_key or not st.session_state.get("api_key_valid", False):
+    st.error("OpenAI API 키를 입력하고 확인 버튼을 눌러주세요.")
     st.stop()
-
-os.environ["OPENAI_API_KEY"] = api_key
 
 class ChatCallbackHandler(BaseCallbackHandler):
     message = ""
@@ -63,8 +63,8 @@ def embed_file(file):
     )
     loader = TextLoader(file_path)
     docs = loader.load_and_split(text_splitter=splitter)
-    embeddings = OpenAIEmbeddings()
-    # embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+    # embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(openai_api_key=api_key)
     cached_embeddings = CacheBackedEmbeddings.from_bytes_store(embeddings, cache_dir)
     vectorstore = FAISS.from_documents(docs, cached_embeddings)
     retriever = vectorstore.as_retriever()
@@ -110,7 +110,7 @@ st.markdown("""
 """)
 
 with st.sidebar:
-    file = st.file_uploader("Upload a file Only .ttxt", type=["txt"])
+    file = st.file_uploader("Upload a file Only .txt", type=["txt"])
 
 
 if file:
