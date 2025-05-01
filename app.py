@@ -10,7 +10,7 @@ st.title("FullstackGPT Home")
 st.markdown("### Task")
 
 st.markdown("""
-- [ ] [Document](/DocumentGPT)
+- [x] [Document](/DocumentGPT)
 - [ ] [Quiz](/QuizGPT)
 - [ ] [Meeting](/MeetingGPT)
 - [ ] [Investor](/InvestorGPT)

@@ -13,6 +13,14 @@ from langchain.callbacks.base import BaseCallbackHandler
 
 st.set_page_config(page_title="Document GPT", page_icon="📰")
 
+# 캐시 디렉토리 생성
+cache_dir = os.path.join(os.getcwd(), ".cache")
+files_dir = os.path.join(cache_dir, "files")
+embeddings_dir = os.path.join(cache_dir, "embeddings")
+
+os.makedirs(files_dir, exist_ok=True)
+os.makedirs(embeddings_dir, exist_ok=True)
+
 # API 키 입력 받기
 with st.sidebar:
     api_key = st.text_input("OpenAI API 키를 입력하세요", type="password", key="api_key")
@@ -48,14 +56,13 @@ llm = ChatOpenAI(
     callbacks=[ChatCallbackHandler()]
 )
 
-
 @st.cache_resource(show_spinner="Embedding...")
 def embed_file(file):
     file_content = file.read()
-    file_path = f"./.cache/files/{file.name}"
+    file_path = os.path.join(files_dir, file.name)
     with open(file_path, "wb") as f:
         f.write(file_content)
-    cache_dir = LocalFileStore(f"./.cache/embeddings/{file.name}")
+    cache_dir = LocalFileStore(os.path.join(embeddings_dir, file.name))
     splitter = CharacterTextSplitter.from_tiktoken_encoder(
         separator="\n",
         chunk_size=600,
@@ -63,7 +70,6 @@ def embed_file(file):
     )
     loader = TextLoader(file_path)
     docs = loader.load_and_split(text_splitter=splitter)
-    # embeddings = OpenAIEmbeddings()
     embeddings = OpenAIEmbeddings(openai_api_key=api_key)
     cached_embeddings = CacheBackedEmbeddings.from_bytes_store(embeddings, cache_dir)
     vectorstore = FAISS.from_documents(docs, cached_embeddings)
