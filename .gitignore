@@ -10,6 +10,8 @@ wheels/
 /old/*
 .cache
 *_explore.ipynb
+/.streamlit
+/.streamlit/*
 
 # Virtual environments
 .venv
