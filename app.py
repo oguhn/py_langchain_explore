@@ -11,9 +11,4 @@ st.markdown("### Task")
 
 st.markdown("""
 - [x] [Document](/DocumentGPT)
-- [ ] [Quiz](/QuizGPT)
-- [ ] [Meeting](/MeetingGPT)
-- [ ] [Investor](/InvestorGPT)
-- [ ] [Site](/SiteGPT)
-- [ ] [Private](/PrivateGPT)
  """)
